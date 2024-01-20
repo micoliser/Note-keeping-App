@@ -73,7 +73,7 @@ div.search input, div.search button {
   cursor: pointer;
   position: absolute;
   bottom: 10%;
-  left: 5%;
+  left: 1.5%;
 }
 
 .note, .delete {
