@@ -59,7 +59,7 @@ function Home({ searchedNote, search }) {
       })
       .then(() => {
         toast.success("Note added successfully");
-        setNotes((prevNotes) => [...prevNotes, note]);
+        setNotes((prevNotes) => [note, ...prevNotes]);
         setNote({ title: "", content: "" });
       })
       .catch((err) => {
