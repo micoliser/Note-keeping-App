@@ -36,7 +36,7 @@ function Home({ searchedNote, search }) {
       .catch((err) => {
         console.log(err);
       });
-  }, [notes]);
+  }, []);
 
   function handleAddChange(event) {
     const { name, value } = event.target;
@@ -59,13 +59,14 @@ function Home({ searchedNote, search }) {
       })
       .then(() => {
         toast.success("Note added successfully");
+        setNotes((prevNotes) => [...prevNotes, note]);
+        setNote({ title: "", content: "" });
       })
       .catch((err) => {
         toast.error(
           "Failed to add note: " + (err.response?.data || err.message)
         );
       });
-    setNote({ title: "", content: "" });
   }
   return (
     <>

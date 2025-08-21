@@ -36,11 +36,18 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-const noteSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  content: { type: String, required: true },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-});
+const noteSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
 const Note = mongoose.model("Note", noteSchema);
 
@@ -79,19 +86,21 @@ function authenticateToken(req, res, next) {
 
 app.get("/notes", authenticateToken, (req, res) => {
   const userId = req.user.userId;
-  Note.find({ userId }, (err, foundNotes) => {
-    if (!err) {
-      if (foundNotes.length !== 0) {
-        res.send(
-          foundNotes.map((note) => {
-            return { title: note.title, content: note.content };
-          })
-        );
-      } else {
-        res.send("Could not find any note now, add a note and try again");
+  Note.find({ userId })
+    .sort({ createdAt: -1 })
+    .exec((err, foundNotes) => {
+      if (!err) {
+        if (foundNotes.length !== 0) {
+          res.send(
+            foundNotes.map((note) => {
+              return { title: note.title, content: note.content };
+            })
+          );
+        } else {
+          res.send("Could not find any note now, add a note and try again");
+        }
       }
-    }
-  });
+    });
 });
 
 app.post("/notes", authenticateToken, (req, res) => {
