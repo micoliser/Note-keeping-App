@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 function DeleteButton() {
   const [deleting, setDelete] = useState(false);
@@ -13,9 +14,19 @@ function DeleteButton() {
   }
 
   function deleteAllNotes() {
-    axios.delete("http://localhost:5000/notes").then((res) => {
-      console.log(res);
-    });
+    const token = localStorage.getItem("token");
+    axios
+      .delete(`${process.env.REACT_APP_API_URL}/notes`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        toast.success("All notes deleted successfully.");
+      })
+      .catch((err) => {
+        toast.error("Failed to delete notes.");
+      });
 
     backFromDelete();
   }

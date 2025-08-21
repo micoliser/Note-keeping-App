@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
@@ -9,6 +10,7 @@ function Note(props) {
     title: props.title,
     content: props.content,
   });
+  const token = localStorage.getItem("token");
 
   function startEdit() {
     setIsEditing(true);
@@ -32,18 +34,34 @@ function Note(props) {
     event.preventDefault();
 
     axios
-      .put("http://localhost:5000/notes/" + title, updatedNote)
+      .put(`${process.env.REACT_APP_API_URL}/notes/` + title, updatedNote, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
-        console.log(res);
+        toast.success("Note updated successfully.");
+      })
+      .catch((err) => {
+        toast.error("Failed to update note. Please try again.");
       });
 
     stopEdit();
   }
 
   function deleteNote(title) {
-    axios.delete("http://localhost:5000/notes/" + title).then((res) => {
-      console.log(res);
-    });
+    axios
+      .delete(`${process.env.REACT_APP_API_URL}/notes/` + title, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        toast.success("Note deleted successfully.");
+      })
+      .catch((err) => {
+        toast.error("Failed to delete note. Please try again.");
+      });
   }
 
   return isEditing ? (
