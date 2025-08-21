@@ -81,15 +81,29 @@ function Home({ searchedNote, search }) {
             return title.toLowerCase().includes(searchedNote.toLowerCase());
           })
           .map(({ title: noteTitle, content: noteContent }, index) => {
-            return <Note key={index} title={noteTitle} content={noteContent} />;
+            return (
+              <Note
+                key={index}
+                title={noteTitle}
+                content={noteContent}
+                setNotes={setNotes}
+              />
+            );
           })
       ) : (
         notes.map(({ title: noteTitle, content: noteContent }, index) => {
-          return <Note key={index} title={noteTitle} content={noteContent} />;
+          return (
+            <Note
+              key={index}
+              title={noteTitle}
+              content={noteContent}
+              setNotes={setNotes}
+            />
+          );
         })
       )}
 
-      {notes.length !== 0 && <DeleteButton />}
+      {notes.length !== 0 && <DeleteButton setNotes={setNotes} />}
     </>
   );
 }

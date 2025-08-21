@@ -4,11 +4,11 @@ import { toast } from "react-hot-toast";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
-function Note(props) {
+function Note({ title, content, setNotes }) {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedNote, setUpdate] = useState({
-    title: props.title,
-    content: props.content,
+    title: title,
+    content: content,
   });
   const token = localStorage.getItem("token");
 
@@ -41,6 +41,11 @@ function Note(props) {
       })
       .then((res) => {
         toast.success("Note updated successfully.");
+        setNotes((prevNotes) =>
+          prevNotes.map((note) =>
+            note.title === title ? { ...note, ...updatedNote } : note
+          )
+        );
       })
       .catch((err) => {
         toast.error("Failed to update note. Please try again.");
@@ -58,6 +63,9 @@ function Note(props) {
       })
       .then((res) => {
         toast.success("Note deleted successfully.");
+        setNotes((prevNotes) =>
+          prevNotes.filter((note) => note.title !== title)
+        );
       })
       .catch((err) => {
         toast.error("Failed to delete note. Please try again.");
@@ -66,7 +74,7 @@ function Note(props) {
 
   return isEditing ? (
     <form className="note">
-      <p style={{ fontSize: "0.9rem" }}>Editing note: '{props.title}'</p>
+      <p style={{ fontSize: "0.9rem" }}>Editing note: '{title}'</p>
       <input
         name="title"
         onChange={handleUpdateChange}
@@ -79,7 +87,7 @@ function Note(props) {
       ></textarea>
       <button
         onClick={(e) => {
-          return updateNote(e, props.title);
+          return updateNote(e, title);
         }}
       >
         Update
@@ -88,14 +96,14 @@ function Note(props) {
     </form>
   ) : (
     <div className="note">
-      <h1>{props.title}</h1>
-      <p>{props.content}</p>
+      <h1>{title}</h1>
+      <p>{content}</p>
       <button onClick={startEdit}>
         <EditIcon />
       </button>
       <button
         onClick={() => {
-          return deleteNote(props.title);
+          return deleteNote(title);
         }}
       >
         <DeleteIcon />

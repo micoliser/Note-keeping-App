@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
-function DeleteButton() {
+function DeleteButton({ setNotes }) {
   const [deleting, setDelete] = useState(false);
 
   function handleDelete() {
@@ -23,6 +23,7 @@ function DeleteButton() {
       })
       .then((res) => {
         toast.success("All notes deleted successfully.");
+        setNotes([]);
       })
       .catch((err) => {
         toast.error("Failed to delete notes.");
